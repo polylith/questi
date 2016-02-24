@@ -64,6 +64,8 @@ div.question_detail .question_content{
 
 div.question_detail .question_vote{
     display: inline-block;
+    text-align: center;
+    vertical-align: middle;
 }
 
 /*END Question Detail*/

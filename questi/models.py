@@ -43,7 +43,10 @@ class Comment(models.Model):
 
 class Vote(models.Model):
     voter = models.ForeignKey(User,null=True)
-    rate = models.IntegerField()
+    rate = models.IntegerField(choices=(
+        (1, "Upvote"),
+        (-1, "Downvote"),
+    ))
     voted_question = models.ForeignKey(Question,null=True)
     voted_answer = models.ForeignKey(Answer,null=True)
     created_at = models.DateTimeField(auto_now_add=True)

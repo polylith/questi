@@ -1,4 +1,29 @@
 {% extends "questi/index.html" %}
+{% load static %}
+
+{% block extra_head %}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var post_data = {'csrfmiddlewaretoken': '{{ csrf_token }}'}
+
+            $("div.vote_up").click(function () {
+                $.post("/question/{{ question.id }}/vote_up/",  , function (data) {
+                    $(".result").html(data);
+                    alert("Load was performed - UP");
+                });
+            });
+            $("div.vote_down").click(function () {
+                $.get("/question/{{ question.id }}/vote_down/", post_data, function (data) {
+                    $(".result").html(data);
+                    alert("Load was performed - DOWN.");
+                });
+            });
+        });
+
+    </script>
+{% endblock %}
 
 {% block title %}{{ object.title }}{% endblock %}
 
@@ -8,7 +33,9 @@
             {{ question.title }}
         </div>
         <div class="question_vote">
+            <div class="vote_up fa fa-chevron-up"></div>
             <span>{{ question.get_rate }}</span>
+            <div class="vote_down fa fa-chevron-down"></div>
         </div>
         <div class="question_content">
             <div class="question_text">
@@ -16,5 +43,6 @@
             </div>
         </div>
     </div>
+    <div class="result"></div>
 {% endblock %}
 

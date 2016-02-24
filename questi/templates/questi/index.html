@@ -5,8 +5,15 @@
     <meta charset="UTF-8">
     <title>{% block title %}Title{% endblock %}</title>
     <link rel="stylesheet" href="{% static "questi/css/style.css" %}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    {% block extra_head %}{% endblock %}
 </head>
 <body>
-{% block content %}{% endblock %}
+{% if request.user.is_authenticated %}
+    {% block content %}{% endblock %}
+{% else %}
+    Not authenticated
+{% endif %}
+
 </body>
 </html>
