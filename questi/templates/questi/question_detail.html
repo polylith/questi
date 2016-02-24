@@ -1,0 +1,20 @@
+{% extends "questi/index.html" %}
+
+{% block title %}{{ object.title }}{% endblock %}
+
+{% block content %}
+    <div class="question_detail">
+        <div class="question_title">
+            {{ question.title }}
+        </div>
+        <div class="question_vote">
+            <span>{{ question.get_rate }}</span>
+        </div>
+        <div class="question_content">
+            <div class="question_text">
+                {{ question.text }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

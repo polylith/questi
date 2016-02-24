@@ -1,0 +1,69 @@
+h2{
+    font-family: "Helvetica", sans-serif;
+}
+
+/*START Question List*/
+div.question_list .question_item{
+   padding-top:10px;
+    padding-bottom: 10px;
+}
+
+div.question_list .question_title{
+    text-decoration: none;
+    color:grey;
+    font-size: 24px;
+}
+
+div.question_list .question_title:visited{
+    color:grey;
+    font-size: 24px;
+}
+
+div.question_list .question_summary {
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
+}
+
+div.question_list .question_summary .votes{
+    display: inline-block;
+    margin-right: 10px;
+}
+
+div.question_list .question_summary .answers{
+    display: inline-block;
+    margin-right: 10px;
+}
+
+div.question_list .question_summary .views{
+    display: inline-block;
+    margin-right: 10px;
+}
+
+div.question_list .question_content{
+    display: inline-block;
+    vertical-align: middle;
+}
+/*END Question List*/
+
+/*START Question Create*/
+label[for=id_text]{
+    vertical-align: top;
+}
+/*END Question Create */
+
+/*START Question Detail*/
+div.question_detail .question_title{
+    color:grey;
+    font-size: 24px;
+}
+
+div.question_detail .question_content{
+    display: inline-block;
+}
+
+div.question_detail .question_vote{
+    display: inline-block;
+}
+
+/*END Question Detail*/

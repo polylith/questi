@@ -1,0 +1,13 @@
+{% extends "questi/index.html" %}
+
+{% block title %}Stelle eine Frage{% endblock %}
+
+{% block content %}
+   <h2>Erstelle neue Frage</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Erstellen</button>
+
+    </form>
+{% endblock %}
