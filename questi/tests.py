@@ -18,11 +18,14 @@ class ForumTest(TestCase):
         test_user = User.objects.get(pk=1)
         self.client.login(username='test', password='passw0rd')
         self.client.post('/question/1/vote_up/')
-        self.assertEqual(self.question.get_rate(),1)
-
+        self.assertEqual(self.question.get_rate(), 1)
 
     def test_questi_authentication(self):
         test_user = User.objects.get(pk=1)
         self.client.post('/admin/', {'username': 'test', 'password1': 'passw0rd'})
         assert test_user.is_authenticated()
 
+    def test_questi_post_question(self):
+        self.client.login(username='test', password='passw0rd')
+        self.client.post('/question/create/', {'title': 'Question1  nfdu ndu fndu nf', 'text': 'bldfbkdnfbpndpbjngpbnfpgnpfpnpjfn'})
+        self.assertEqual(Question.objects.count(), 2)
