@@ -52,4 +52,16 @@ class Vote(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def vote_up(self):
+        if self.rate == 1:
+            pass
+        else:
+            self.rate = 1
+
+    def vote_down(self):
+        if self.rate == -1:
+            pass
+        else:
+            self.rate == -1
+
 

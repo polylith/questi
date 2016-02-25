@@ -9,7 +9,7 @@
             var post_data = {'csrfmiddlewaretoken': '{{ csrf_token }}'}
 
             $("div.vote_up").click(function () {
-                $.post("/question/{{ question.id }}/vote_up/",  , function (data) {
+                $.post("/question/{{ question.id }}/vote_up/", post_data, function (data) {
                     $(".result").html(data);
                     alert("Load was performed - UP");
                 });

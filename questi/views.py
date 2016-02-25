@@ -54,25 +54,34 @@ class QuestionDetailView(DetailView):
 
 
 def question_vote_up(request, question_id):
-    if request.method == "POST":
+    if request.method == "POST" and request.user.is_authenticated():
         question = Question.objects.get(pk=question_id)
-        v = Vote(voted_question=question, rate=1)
-        v.save()
-        return HttpResponse("Test")
+        try:
+            user_vote = question.vote_set.get(voter=request.user)
+            user_vote.vote_up()
+            user_vote.save()
+            return HttpResponse("aktualisiert")
 
+        except Vote.DoesNotExist:
+            new_user_vote = Vote(voted_question=question, rate=1)
+            new_user_vote.save()
+            return HttpResponse("neuer Vote")
     else:
-        return HttpResponse("Test")
+        pass
 
 
 def question_vote_down(request, question_id):
-    if request.method == "POST":
+    if request.method == "POST" and request.user.is_authenticated():
         question = Question.objects.get(pk=question_id)
-        # user = request.user
-        if question.vote_set.filter(rate=1).empty():
-            print("upvote")
-        vote = Vote(voted_question=question, rate=-1)
-        vote.save()
-        return HttpResponse("Test")
+        try:
+            user_vote = question.vote_set.get(voter=request.user)
+            user_vote.vote_down()
+            user_vote.save()
+            return HttpResponse("aktualisiert")
 
+        except Vote.DoesNotExist:
+            new_user_vote = Vote(voted_question=question, rate=-1)
+            new_user_vote.save()
+            return HttpResponse("neuer Vote")
     else:
-        return HttpResponse("Test")
+        pass
