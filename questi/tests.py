@@ -17,6 +17,8 @@ class ForumTest(TestCase):
     def test_questi_vote_up(self):
         test_user = User.objects.get(pk=1)
         self.client.login(username='test', password='passw0rd')
+        self.assertEqual(self.question.vote_set.count(), 0)
+        self.assertEqual(self.question.get_rate(), 0)
         self.client.post('/question/1/vote_up/')
         self.assertEqual(self.question.get_rate(), 1)
 
@@ -35,3 +37,31 @@ class ForumTest(TestCase):
         self.assertEqual(new_question.text,
                          'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.')
         self.assertEqual(Question.objects.count(), 2)
+
+    def test_questi_question_double_up_vote(self):
+        self.client.login(username='test', password='passw0rd')
+        self.client.post('/question/1/vote_up/')
+        self.assertEqual(self.question.vote_set.count(), 1)
+        self.client.post('/question/1/vote_up/')
+        self.assertEqual(self.question.vote_set.count(), 0)
+
+    def test_questi_question_double_down_vote(self):
+        self.client.login(username='test', password='passw0rd')
+        self.client.post('/question/1/vote_down/')
+        self.assertEqual(self.question.vote_set.count(), 1)
+        self.client.post('/question/1/vote_down/')
+        self.assertEqual(self.question.vote_set.count(), 0)
+
+    def test_questi_up_vote_down_vote_question(self):
+        self.client.login(username='test', password='passw0rd')
+        self.client.post('/question/1/vote_up/')
+        self.assertEqual(self.question.vote_set.count(), 1)
+        self.client.post('/question/1/vote_down/')
+        self.assertEqual(self.question.get_rate(), -1)
+
+    def test_questi_down_vote_up_vote_question(self):
+        self.client.login(username='test', password='passw0rd')
+        self.client.post('/question/1/vote_down/')
+        self.assertEqual(self.question.vote_set.count(), 1)
+        self.client.post('/question/1/vote_up/')
+        self.assertEqual(self.question.get_rate(), 1)

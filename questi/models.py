@@ -55,14 +55,14 @@ class Vote(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def vote_up(self):
-        if self.rate == 1:
+        if self.rate >= 1:
             return False
         else:
             self.rate = 1
             return True
 
     def vote_down(self):
-        if self.rate == -1:
+        if self.rate <= -1:
             return False
         else:
             self.rate = -1
