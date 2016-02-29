@@ -9,17 +9,18 @@
             var post_data = {'csrfmiddlewaretoken': '{{ csrf_token }}'}
 
             $("div.vote_up").click(function () {
-                $.post("/question/{{ question.id }}/vote_up/", post_data, function (data) {
-                    $(".result").html(data);
-                    alert("Load was performed - UP");
+                $.ajax({
+                    type: "POST",
+                    url: "/question/{{ question.id }}/vote_up/",
+                    data: post_data,
+                    success: function (data) {
+                        alert('funktioniert');
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Error, status=" + textStatus + ", " + "error thrown: " + errorThrown);
+                    }
                 });
-            });
-            $("div.vote_down").click(function () {
-                $.get("/question/{{ question.id }}/vote_down/", post_data, function (data) {
-                    $(".result").html(data);
-                    alert("Load was performed - DOWN.");
-                });
-            });
+            })
         });
 
     </script>

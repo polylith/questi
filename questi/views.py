@@ -1,5 +1,6 @@
 from django import forms
-from django.http import HttpResponse
+from django.core.serializers import json
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
 
@@ -60,14 +61,14 @@ def question_vote_up(request, question_id):
             user_vote = question.vote_set.get(voter=request.user)
             user_vote.vote_up()
             user_vote.save()
-            return HttpResponse("aktualisiert")
+            return HttpResponse()
 
         except Vote.DoesNotExist:
             new_user_vote = Vote(voted_question=question, rate=1)
             new_user_vote.save()
-            return HttpResponse("neuer Vote")
+            return HttpResponse()
     else:
-        pass
+        return HttpResponseBadRequest()
 
 
 def question_vote_down(request, question_id):
@@ -77,11 +78,11 @@ def question_vote_down(request, question_id):
             user_vote = question.vote_set.get(voter=request.user)
             user_vote.vote_down()
             user_vote.save()
-            return HttpResponse("aktualisiert")
+            return HttpResponse()
 
         except Vote.DoesNotExist:
             new_user_vote = Vote(voted_question=question, rate=-1)
             new_user_vote.save()
-            return HttpResponse("neuer Vote")
+            return HttpResponse()
     else:
-        pass
+        return HttpResponseBadRequest()

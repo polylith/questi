@@ -27,5 +27,11 @@ class ForumTest(TestCase):
 
     def test_questi_post_question(self):
         self.client.login(username='test', password='passw0rd')
-        self.client.post('/question/create/', {'title': 'Question1  nfdu ndu fndu nf', 'text': 'bldfbkdnfbpndpbjngpbnfpgnpfpnpjfn'})
+        self.client.post('/question/create/',
+                         {'title': 'Question1: Lorem ipsum dolor sit amet, consetetur sadipscing elitr',
+                          'text': 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.'})
+        new_question = Question.objects.get(pk="2")
+        self.assertEqual(new_question.title, 'Question1: Lorem ipsum dolor sit amet, consetetur sadipscing elitr')
+        self.assertEqual(new_question.text,
+                         'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.')
         self.assertEqual(Question.objects.count(), 2)

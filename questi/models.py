@@ -7,11 +7,10 @@ from django.db import models
 class Question(models.Model):
     text = models.CharField(max_length=2000)
     title = models.CharField(max_length=200)
-    questioner = models.ForeignKey(User,null=True)
+    questioner = models.ForeignKey(User, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     views = models.IntegerField(default=0)
-
 
     def get_rate(self):
         ges_rate = 0
@@ -19,18 +18,21 @@ class Question(models.Model):
             ges_rate += vote.rate
             return ges_rate
         return ges_rate
+
     def __str__(self):
         return self.title
+
 
 class Answer(models.Model):
     text = models.CharField(max_length=2000)
     question = models.ForeignKey(Question)
-    answerer = models.ForeignKey(User,null=True)
+    answerer = models.ForeignKey(User, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.text
+
 
 class Comment(models.Model):
     text = models.CharField(max_length=2000)
@@ -42,26 +44,26 @@ class Comment(models.Model):
 
 
 class Vote(models.Model):
-    voter = models.ForeignKey(User,null=True)
+    voter = models.ForeignKey(User, null=True)
     rate = models.IntegerField(choices=(
         (1, "Upvote"),
         (-1, "Downvote"),
     ))
-    voted_question = models.ForeignKey(Question,null=True)
-    voted_answer = models.ForeignKey(Answer,null=True)
+    voted_question = models.ForeignKey(Question, null=True)
+    voted_answer = models.ForeignKey(Answer, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def vote_up(self):
         if self.rate == 1:
-            pass
+            return False
         else:
             self.rate = 1
+            return True
 
     def vote_down(self):
         if self.rate == -1:
-            pass
+            return False
         else:
-            self.rate == -1
-
-
+            self.rate = -1
+            return True
