@@ -30,6 +30,13 @@ class Answer(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def get_rate(self):
+        ges_rate = 0
+        for vote in self.vote_set.all():
+            ges_rate += vote.rate
+            return ges_rate
+        return ges_rate
+
     def __str__(self):
         return self.text
 
@@ -83,4 +90,22 @@ def vote_question(self, question, rate):
         return new_user_vote
 
 
+def vote_answer(self, answer, rate):
+    try:
+        user_vote = self.vote_set.get(voted_answer=answer)
+        if user_vote.rate == rate:
+            user_vote.delete()
+            return None
+        else:
+            user_vote.set_rate(rate)
+            user_vote.save()
+            return user_vote
+    except Vote.DoesNotExist:
+        new_user_vote = Vote(voted_answer=answer, voter=self)
+        new_user_vote.set_rate(rate)
+        new_user_vote.save()
+        return new_user_vote
+
+
 User.add_to_class('vote_question', vote_question)
+User.add_to_class('vote_answer', vote_answer)

@@ -65,3 +65,15 @@ class ForumTest(TestCase):
         self.assertEqual(self.question.vote_set.count(), 1)
         self.client.post('/question/1/vote_up/')
         self.assertEqual(self.question.get_rate(), 1)
+
+    def test_questi_delete_question(self):
+        self.client.login(username='test', password='passw0rd')
+        self.client.post('/question/1/vote_down/')
+        self.assertEqual(Vote.objects.count(),1)
+        self.question.delete()
+        self.assertEqual(Vote.objects.count(),0)
+
+    def test_questi_post_to_question_detail_view(self):
+        self.client.login(username='test', password='passw0rd')
+        self.client.get('/question/1/')
+        self.client.post('/question/1/')

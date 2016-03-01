@@ -12,7 +12,6 @@
                 $.ajax({
                     type: "POST",
                     url: "/question/{{ question.id }}/vote_up/",
-                    data: post_data,
                     success: function (data) {
                         alert('funktioniert');
                     },
@@ -44,6 +43,20 @@
             </div>
         </div>
     </div>
-    <div class="result"></div>
+    <div class="answers">
+        <div class="answer_list">
+            {% for answer in question.answer_set.all %}
+                <div id="answer_{{ answer.id }}">{{ answer.text }}</div>
+            {% endfor %}
+        </div>
+        <div class="post_answer">
+            <form method="post">
+                {% csrf_token %}
+                {{ answer_form.as_p }}
+                <button type="submit">Erstellen</button>
+            </form>
+        </div>
+    </div>
+
 {% endblock %}
 
