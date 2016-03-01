@@ -54,16 +54,33 @@ class Vote(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def vote_up(self):
-        if self.rate >= 1:
-            return False
-        else:
+    def set_rate(self, rate):
+        if rate > 1:
             self.rate = 1
-            return True
-
-    def vote_down(self):
-        if self.rate <= -1:
-            return False
-        else:
+        elif rate < -1:
             self.rate = -1
-            return True
+        elif rate == 0:
+            pass
+        else:
+            self.rate = rate
+
+
+# new auth.user functions
+def vote_question(self, question, rate):
+    try:
+        user_vote = self.vote_set.get(voted_question=question)
+        if user_vote.rate == rate:
+            user_vote.delete()
+            return None
+        else:
+            user_vote.set_rate(rate)
+            user_vote.save()
+            return user_vote
+    except Vote.DoesNotExist:
+        new_user_vote = Vote(voted_question=question, voter=self)
+        new_user_vote.set_rate(rate)
+        new_user_vote.save()
+        return new_user_vote
+
+
+User.add_to_class('vote_question', vote_question)

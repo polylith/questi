@@ -57,38 +57,20 @@ class QuestionDetailView(DetailView):
 def question_vote_up(request, question_id):
     if request.method == "POST" and request.user.is_authenticated():
         question = Question.objects.get(pk=question_id)
-        try:
-            user_vote = question.vote_set.get(voter=request.user)
-            if user_vote.vote_up():
-                user_vote.save()
-                return HttpResponse()
-            else:
-                user_vote.delete()
-                return HttpResponseBadRequest()
-
-        except Vote.DoesNotExist:
-            new_user_vote = Vote(voted_question=question, rate=1, voter=request.user)
-            new_user_vote.save()
+        vote = request.user.vote_question(question, 1)
+        if vote != None:
             return HttpResponse()
-    else:
-        return HttpResponseBadRequest()
+        else:
+            return HttpResponseBadRequest()
+    return HttpResponseBadRequest()
 
 
 def question_vote_down(request, question_id):
     if request.method == "POST" and request.user.is_authenticated():
         question = Question.objects.get(pk=question_id)
-        try:
-            user_vote = question.vote_set.get(voter=request.user)
-            if user_vote.vote_down():
-                user_vote.save()
-                return HttpResponse()
-            else:
-                user_vote.delete()
-                return HttpResponseBadRequest()
-
-        except Vote.DoesNotExist:
-            new_user_vote = Vote(voted_question=question, rate=-1, voter=request.user)
-            new_user_vote.save()
+        vote = request.user.vote_question(question, -1)
+        if vote != None:
             return HttpResponse()
-    else:
-        return HttpResponseBadRequest()
+        else:
+            return HttpResponseBadRequest()
+    return HttpResponseBadRequest()
