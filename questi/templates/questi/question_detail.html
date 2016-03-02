@@ -12,11 +12,43 @@
                 $.ajax({
                     type: "POST",
                     url: "/question/{{ question.id }}/vote_up/",
+                    data: post_data,
                     success: function (data) {
-                        alert('funktioniert');
+                        var vote_rate = parseInt($("div.question_vote span").text());
+                        vote_rate += 1;
+                        if (vote_rate == 0) {
+                            vote_rate = 1;
+                        }
+                        $("div.question_vote span").html(vote_rate);
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        alert("Error, status=" + textStatus + ", " + "error thrown: " + errorThrown);
+                        var vote_rate = parseInt($("div.question_vote span").text());
+                        vote_rate -= 1;
+                        $("div.question_vote span").html(vote_rate);
+                        alert("Ihr Vote wurde wieder gelöscht");
+                    }
+                });
+            })
+
+            $("div.vote_down").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/question/{{ question.id }}/vote_down/",
+                    data: post_data,
+                    success: function (data) {
+                        var vote_rate = parseInt($("div.question_vote span").text());
+                        vote_rate -= 1;
+                        if (vote_rate == 0) {
+                            vote_rate = -1;
+                        }
+                        $("div.question_vote span").html(vote_rate);
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        var vote_rate = parseInt($("div.question_vote span").text());
+                        vote_rate += 1;
+                        $("div.question_vote span").html(vote_rate);
+                        alert("Ihr Vote wurde wieder gelöscht");
                     }
                 });
             })
