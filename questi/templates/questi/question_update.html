@@ -1,0 +1,12 @@
+{% extends "questi/index.html" %}
+
+{% block title %}Deine Frage bearbeiten{% endblock %}
+
+{% block content %}
+    <div class="question_update">
+        <form action="" method="post">{% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Update"/>
+        </form>s
+    </div>
+{% endblock %}

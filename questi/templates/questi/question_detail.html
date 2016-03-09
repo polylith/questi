@@ -60,6 +60,7 @@
 {% block title %}{{ object.title }}{% endblock %}
 
 {% block content %}
+    {{ success_text }}
     <div class="question_detail">
         <div class="question_title">
             {{ question.title }}
@@ -82,6 +83,7 @@
             {% endfor %}
         </div>
         <div class="post_answer">
+            <h2>Schreiben Sie eine Antwort zur gestellten Fragen</h2>
             <form method="post">
                 {% csrf_token %}
                 {{ answer_form.as_p }}

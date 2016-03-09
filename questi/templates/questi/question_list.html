@@ -3,10 +3,10 @@
 {% block title %}Fragen{% endblock %}
 
 {% block content %}
-    <h1>Questions</h1>
+    <h1>Fragen</h1>
     <div class="question_list">
         {% for question in question_list %}
-            <div class ="question_item">
+            <div class="question_item">
                 <div class="question_summary">
                     <div class="votes">
                         <span>{{ question.get_rate }}</span>
@@ -23,8 +23,9 @@
                 </div>
                 <div class="question_content">
                     <a class="question_title" href="{% url 'question_detail' question.id %}">
-                        {{question.title}}
+                        {{ question.title }}
                     </a>
+                    <div class="question_creationtime">{{ question.get_time_as_string }}</div>
                 </div>
             </div>
         {% empty %}

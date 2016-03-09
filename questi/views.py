@@ -48,9 +48,14 @@ class QuestionDetailView(DetailView):
         context = super(QuestionDetailView, self).get_context_data(**kwargs)
         form = AnswerForm(None)
         context['answer_form'] = form
+        try:
+            context['success_text'] = self.request.session['success_text']
+            del self.request.session['success_text']
+        except KeyError:
+            pass
         return context
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, **kwargs):
         self.object = Question.objects.get(pk=kwargs.get('slug'))
 
         form = AnswerForm(request.POST)
@@ -64,6 +69,19 @@ class QuestionDetailView(DetailView):
         else:
             context['answer_form'] = form
             return self.render_to_response(context)
+
+
+class QuestionUpdateView(UpdateView):
+    model = Question
+    slug_field = 'pk'
+    fields = ['text',
+              'title']
+    template_name_suffix = '_update'
+
+    def get_success_url(self):
+        user = self.request.user
+        self.request.session["success_text"] = "Frage wurde erfolgreich editiert."
+        return "/question/" + str(self.object.id)
 
 
 def question_vote_up(request, question_id):

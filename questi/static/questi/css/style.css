@@ -68,4 +68,8 @@ div.question_detail .question_vote{
     vertical-align: middle;
 }
 
+ul.errorlist{
+    color:red;
+}
+
 /*END Question Detail*/

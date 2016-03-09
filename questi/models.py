@@ -1,3 +1,4 @@
+# coding=utf-8
 from __future__ import unicode_literals
 
 from django.contrib.auth.models import User
@@ -11,6 +12,14 @@ class Question(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     views = models.IntegerField(default=0)
+
+    def get_time_as_string(self):
+        create_time = self.created_at.strftime('%d %m %Y %H:%M %S')
+        update_time = self.updated_at.strftime('%d %m %Y %H:%M %S')
+        if create_time == update_time:
+            return "erstellt am " + self.created_at.strftime('%d %m %Y %H:%M')
+        else:
+            return "geändert am " + self.updated_at.strftime('%d %m %Y %H:%M')
 
     def get_rate(self):
         ges_rate = 0
@@ -73,9 +82,9 @@ class Vote(models.Model):
 
 
 # new auth.user functions
-def vote_question(self, question, rate):
+def vote_question(user, question, rate):
     try:
-        user_vote = self.vote_set.get(voted_question=question)
+        user_vote = user.vote_set.get(voted_question=question)
         if user_vote.rate == rate:
             user_vote.delete()
             return None
@@ -84,15 +93,15 @@ def vote_question(self, question, rate):
             user_vote.save()
             return user_vote
     except Vote.DoesNotExist:
-        new_user_vote = Vote(voted_question=question, voter=self)
+        new_user_vote = Vote(voted_question=question, voter=user)
         new_user_vote.set_rate(rate)
         new_user_vote.save()
         return new_user_vote
 
 
-def vote_answer(self, answer, rate):
+def vote_answer(user, answer, rate):
     try:
-        user_vote = self.vote_set.get(voted_answer=answer)
+        user_vote = user.vote_set.get(voted_answer=answer)
         if user_vote.rate == rate:
             user_vote.delete()
             return None
@@ -101,7 +110,7 @@ def vote_answer(self, answer, rate):
             user_vote.save()
             return user_vote
     except Vote.DoesNotExist:
-        new_user_vote = Vote(voted_answer=answer, voter=self)
+        new_user_vote = Vote(voted_answer=answer, voter=user)
         new_user_vote.set_rate(rate)
         new_user_vote.save()
         return new_user_vote
