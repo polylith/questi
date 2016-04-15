@@ -48,8 +48,9 @@ class QuestionDetailView(DetailView):
         context = super(QuestionDetailView, self).get_context_data(**kwargs)
         form = AnswerForm(None)
         context['answer_form'] = form
+        context['user_vote'] = self.object.is_vote_by_user(self.request.user)
         try:
-            context['success_text'] = self.request.session['success_text']
+            context['success_text'] = self.request.session.get('success_text', None)
             del self.request.session['success_text']
         except KeyError:
             pass

@@ -20,11 +20,14 @@
                             vote_rate = 1;
                         }
                         $("div.question_vote span").html(vote_rate);
+                        $("div.vote_down").removeClass("active");
+                        $("div.vote_up").addClass("active");
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         var vote_rate = parseInt($("div.question_vote span").text());
                         vote_rate -= 1;
                         $("div.question_vote span").html(vote_rate);
+                        $("div.vote_up").removeClass("active");
                         alert("Ihr Vote wurde wieder gelöscht");
                     }
                 });
@@ -41,6 +44,8 @@
                         if (vote_rate == 0) {
                             vote_rate = -1;
                         }
+                        $("div.vote_up").removeClass("active");
+                        $("div.vote_down").addClass("active");
                         $("div.question_vote span").html(vote_rate);
 
                     },
@@ -48,6 +53,7 @@
                         var vote_rate = parseInt($("div.question_vote span").text());
                         vote_rate += 1;
                         $("div.question_vote span").html(vote_rate);
+                        $("div.vote_down").removeClass("active");
                         alert("Ihr Vote wurde wieder gelöscht");
                     }
                 });
@@ -66,9 +72,9 @@
             {{ question.title }}
         </div>
         <div class="question_vote">
-            <div class="vote_up fa fa-chevron-up"></div>
+            <div class="vote_up fa fa-chevron-up {% if user_vote == 1 %} active {% endif %}"></div>
             <span>{{ question.get_rate }}</span>
-            <div class="vote_down fa fa-chevron-down"></div>
+            <div class="vote_down fa fa-chevron-down {% if user_vote == -1 %} active {% endif %}"></div>
         </div>
         <div class="question_content">
             <div class="question_text">

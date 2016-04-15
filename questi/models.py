@@ -14,12 +14,12 @@ class Question(models.Model):
     views = models.IntegerField(default=0)
 
     def get_time_as_string(self):
-        create_time = self.created_at.strftime('%d %m %Y %H:%M %S')
-        update_time = self.updated_at.strftime('%d %m %Y %H:%M %S')
+        create_time = self.created_at.strftime('%d.%m.%Y %H:%M %S Uhr')
+        update_time = self.updated_at.strftime('%d %m %Y %H:%M %S Uhr')
         if create_time == update_time:
-            return "erstellt am " + self.created_at.strftime('%d %m %Y %H:%M')
+            return "erstellt am " + self.created_at.strftime('%d.%m.%Y %H:%M Uhr')
         else:
-            return "geändert am " + self.updated_at.strftime('%d %m %Y %H:%M')
+            return "geändert am " + self.updated_at.strftime('%d.%m.%Y %H:%M Uhr')
 
     def get_rate(self):
         ges_rate = 0
@@ -28,9 +28,15 @@ class Question(models.Model):
             return ges_rate
         return ges_rate
 
+    def is_vote_by_user(self,user):
+        try:
+            vote = user.vote_set.get(voted_question=self.id)
+            return vote.rate
+        except Vote.DoesNotExist:
+            return 0
+
     def __str__(self):
         return self.title
-
 
 class Answer(models.Model):
     text = models.CharField(max_length=2000)
@@ -80,7 +86,6 @@ class Vote(models.Model):
         else:
             self.rate = rate
 
-
 # new auth.user functions
 def vote_question(user, question, rate):
     try:
@@ -102,18 +107,19 @@ def vote_question(user, question, rate):
 def vote_answer(user, answer, rate):
     try:
         user_vote = user.vote_set.get(voted_answer=answer)
-        if user_vote.rate == rate:
-            user_vote.delete()
-            return None
-        else:
-            user_vote.set_rate(rate)
-            user_vote.save()
-            return user_vote
     except Vote.DoesNotExist:
         new_user_vote = Vote(voted_answer=answer, voter=user)
         new_user_vote.set_rate(rate)
         new_user_vote.save()
         return new_user_vote
+
+    if user_vote.rate == rate:
+        user_vote.delete()
+        return None
+    else:
+        user_vote.set_rate(rate)
+        user_vote.save()
+        return user_vote
 
 
 User.add_to_class('vote_question', vote_question)

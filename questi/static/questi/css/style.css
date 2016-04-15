@@ -72,4 +72,8 @@ ul.errorlist{
     color:red;
 }
 
+.active{
+    border: solid 1px black;
+}
+
 /*END Question Detail*/
