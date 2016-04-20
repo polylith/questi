@@ -66,7 +66,7 @@
 {% block title %}{{ object.title }}{% endblock %}
 
 {% block content %}
-    {{ success_text }}
+    {% if success_text %}{{ success_text }}{% endif %}
     <div class="question_detail">
         <div class="question_title">
             {{ question.title }}
@@ -86,6 +86,10 @@
         <div class="answer_list">
             {% for answer in question.answer_set.all %}
                 <div id="answer_{{ answer.id }}">{{ answer.text }}</div>
+                {% if answer.user == user %}
+                    <div class="answer_edit"><a class="question_title" href="{% url 'answer_update' answer.id %}">
+                         deine Antwort bearbeiten
+                    </a></div>{% endif %}
             {% endfor %}
         </div>
         <div class="post_answer">

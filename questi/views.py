@@ -105,3 +105,15 @@ def question_vote_down(request, question_id):
         else:
             return HttpResponseBadRequest()
     return HttpResponseBadRequest()
+
+
+class AnswerUpdateView(UpdateView):
+    model = Answer
+    slug_field = 'pk'
+    fields = ['text']
+    template_name_suffix = '_update'
+
+    def get_success_url(self):
+        user = self.request.user
+        self.request.session["success_text"] = "Antwort wurde erfolgreich editiert."
+        return "/question/" + str(self.object.question.id)
