@@ -8,7 +8,7 @@ from django.db import models
 class Question(models.Model):
     text = models.CharField(max_length=2000)
     title = models.CharField(max_length=200)
-    questioner = models.ForeignKey(User, null=True)
+    user = models.ForeignKey(User, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     views = models.IntegerField(default=0)
@@ -19,7 +19,7 @@ class Question(models.Model):
         if create_time == update_time:
             return "erstellt am " + self.created_at.strftime('%d.%m.%Y %H:%M Uhr')
         else:
-            return "geändert am " + self.updated_at.strftime('%d.%m.%Y %H:%M Uhr')
+            return "zuletzt geändert am " + self.updated_at.strftime('%d.%m.%Y %H:%M Uhr')
 
     def get_rate(self):
         ges_rate = 0
@@ -41,7 +41,7 @@ class Question(models.Model):
 class Answer(models.Model):
     text = models.CharField(max_length=2000)
     question = models.ForeignKey(Question)
-    answerer = models.ForeignKey(User, null=True)
+    user = models.ForeignKey(User, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -58,7 +58,7 @@ class Answer(models.Model):
 
 class Comment(models.Model):
     text = models.CharField(max_length=2000)
-    commentator = models.ForeignKey(User)
+    user = models.ForeignKey(User)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     commented_question = models.ForeignKey(Question)
@@ -66,7 +66,7 @@ class Comment(models.Model):
 
 
 class Vote(models.Model):
-    voter = models.ForeignKey(User, null=True)
+    user = models.ForeignKey(User, null=True)
     rate = models.IntegerField(choices=(
         (1, "Upvote"),
         (-1, "Downvote"),
@@ -98,7 +98,7 @@ def vote_question(user, question, rate):
             user_vote.save()
             return user_vote
     except Vote.DoesNotExist:
-        new_user_vote = Vote(voted_question=question, voter=user)
+        new_user_vote = Vote(voted_question=question, user=user)
         new_user_vote.set_rate(rate)
         new_user_vote.save()
         return new_user_vote
@@ -108,7 +108,7 @@ def vote_answer(user, answer, rate):
     try:
         user_vote = user.vote_set.get(voted_answer=answer)
     except Vote.DoesNotExist:
-        new_user_vote = Vote(voted_answer=answer, voter=user)
+        new_user_vote = Vote(voted_answer=answer, user=user)
         new_user_vote.set_rate(rate)
         new_user_vote.save()
         return new_user_vote

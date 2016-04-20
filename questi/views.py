@@ -21,7 +21,7 @@ def create_question(request):
         form = QuestionForm(request.POST)
         if form.is_valid():
             new_question = form.save(commit=False)
-            new_question.questioner = request.user
+            new_question.user = request.user
             new_question.save()
             return redirect('question_list')
         else:
@@ -64,7 +64,7 @@ class QuestionDetailView(DetailView):
         if form.is_valid() and request.user.is_authenticated():
             new_answer = form.save(commit=False)
             new_answer.question = self.object
-            new_answer.answerer = request.user
+            new_answer.user = request.user
             new_answer.save()
             return self.render_to_response(context)
         else:
