@@ -88,7 +88,7 @@
                 <div id="answer_{{ answer.id }}">{{ answer.text }}</div>
                 {% if answer.user == user %}
                     <div class="answer_edit"><a class="question_title" href="{% url 'answer_update' answer.id %}">
-                         deine Antwort bearbeiten
+                        deine Antwort bearbeiten
                     </a></div>{% endif %}
             {% endfor %}
         </div>
