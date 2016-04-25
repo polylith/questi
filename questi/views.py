@@ -2,6 +2,7 @@ from django import forms
 from django.core.serializers import json
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
+from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import ListView, DetailView, UpdateView
 from django.views.generic.edit import ModelFormMixin, ProcessFormView
@@ -81,8 +82,8 @@ class QuestionUpdateView(UpdateView):
 
     def get_success_url(self):
         user = self.request.user
-        self.request.session["success_text"] = "Frage wurde erfolgreich editiert."
-        return "/question/" + str(self.object.id)
+        self.request.session["success_text"] = _("Answer successful edited.")
+        return "/question/{0}".format(self.object.id)
 
 
 def question_vote_up(request, question_id):
@@ -115,5 +116,5 @@ class AnswerUpdateView(UpdateView):
 
     def get_success_url(self):
         user = self.request.user
-        self.request.session["success_text"] = "Antwort wurde erfolgreich editiert."
-        return "/question/" + str(self.object.question.id)
+        self.request.session["success_text"] = _("Answer successful edited.")
+        return "/question/{0}".format(self.object.id)

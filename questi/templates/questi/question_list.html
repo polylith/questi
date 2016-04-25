@@ -1,24 +1,25 @@
 {% extends "questi/index.html" %}
+{% load i18n %}
 
-{% block title %}Fragen{% endblock %}
+{% block title %}{% blocktrans %}Questions{% endblocktrans %}{% endblock %}
 
 {% block content %}
-    <h1>Fragen</h1>
+    <h1>{% blocktrans %}Questions{% endblocktrans %}</h1>
     <div class="question_list">
         {% for question in question_list %}
             <div class="question_item">
                 <div class="question_summary">
                     <div class="votes">
                         <span>{{ question.get_rate }}</span>
-                        <div>Votes</div>
+                        <div>{% blocktrans %}Votes{% endblocktrans %}</div>
                     </div>
                     <div class="answers">
                         <span>{{ question.answer_set.count }}</span>
-                        <div>Antworten</div>
+                        <div>{% blocktrans %}Answers{% endblocktrans %}</div>
                     </div>
                     <div class="views">
                         <span>{{ question.views }}</span>
-                        <div>Views</div>
+                        <div>{% blocktrans %}Views{% endblocktrans %}</div>
                     </div>
                 </div>
                 <div class="question_content">
@@ -29,7 +30,7 @@
                 </div>
             </div>
         {% empty %}
-            <p>Keine Fragen vorhanden</p>
+            <p>{% blocktrans %}No answers{% endblocktrans %}</p>
         {% endfor %}
     </div>
 {% endblock %}

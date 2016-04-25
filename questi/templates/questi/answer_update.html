@@ -1,12 +1,13 @@
 {% extends "questi/index.html" %}
+{% load i18n %}
 
-{% block title %}Deine Antwort bearbeiten{% endblock %}
+{% block title %}{% blocktrans %}Edit your answer{% endblocktrans %}{% endblock %}
 
 {% block content %}
     <div class="answer_update">
         <form action="" method="post">{% csrf_token %}
             {{ form.as_p }}
-            <input type="submit" value="Update"/>
+            <input type="submit" value="{% trans "update" %}"/>
         </form>
     </div>
 {% endblock %}

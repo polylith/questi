@@ -1,4 +1,5 @@
 {% extends "questi/index.html" %}
+{% load i18n %}
 {% load static %}
 
 {% block extra_head %}
@@ -28,7 +29,7 @@
                         vote_rate -= 1;
                         $("div.question_vote span").html(vote_rate);
                         $("div.vote_up").removeClass("active");
-                        alert("Ihr Vote wurde wieder gelöscht");
+                        alert("{% blocktrans %}Your vote has been deleted{% endblocktrans %}");
                     }
                 });
             })
@@ -54,7 +55,7 @@
                         vote_rate += 1;
                         $("div.question_vote span").html(vote_rate);
                         $("div.vote_down").removeClass("active");
-                        alert("Ihr Vote wurde wieder gelöscht");
+                         alert("{% blocktrans %}Your vote has been deleted{% endblocktrans %}");
                     }
                 });
             })
@@ -88,16 +89,16 @@
                 <div id="answer_{{ answer.id }}">{{ answer.text }}</div>
                 {% if answer.user == user %}
                     <div class="answer_edit"><a class="question_title" href="{% url 'answer_update' answer.id %}">
-                        deine Antwort bearbeiten
+                        {% blocktrans %}Edit your answer{% endblocktrans %}
                     </a></div>{% endif %}
             {% endfor %}
         </div>
         <div class="post_answer">
-            <h2>Schreiben Sie eine Antwort zur gestellten Fragen</h2>
+            <h2>{% blocktrans %}Write an answer to the given question{% endblocktrans %}</h2>
             <form method="post">
                 {% csrf_token %}
                 {{ answer_form.as_p }}
-                <button type="submit">Erstellen</button>
+                <button type="submit">{% trans "create" %}</button>
             </form>
         </div>
     </div>
