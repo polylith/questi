@@ -1,5 +1,6 @@
 {% extends "questi/index.html" %}
 {% load i18n %}
+{% load answer_extra %}
 {% load static %}
 
 {% block extra_head %}
@@ -10,52 +11,57 @@
             var post_data = {'csrfmiddlewaretoken': '{{ csrf_token }}'}
 
             $("div.vote_up").click(function () {
+                var act_element = $(this).parent();
+                var url = $(this).data("link");
+            console.log(url);
                 $.ajax({
                     type: "POST",
-                    url: "/question/{{ question.id }}/vote_up/",
+                    url: url,
                     data: post_data,
                     success: function (data) {
-                        var vote_rate = parseInt($("div.question_vote span").text());
+                        var vote_rate = parseInt(act_element.find("span.rate").text());
                         vote_rate += 1;
                         if (vote_rate == 0) {
                             vote_rate = 1;
                         }
-                        $("div.question_vote span").html(vote_rate);
-                        $("div.vote_down").removeClass("active");
-                        $("div.vote_up").addClass("active");
+                        act_element.find("span.rate").html(vote_rate);
+                        act_element.find("div.vote_down").removeClass("active");
+                        act_element.find("div.vote_up").addClass("active");
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        var vote_rate = parseInt($("div.question_vote span").text());
+                        var vote_rate = parseInt(act_element.find("span.rate").text());
                         vote_rate -= 1;
-                        $("div.question_vote span").html(vote_rate);
-                        $("div.vote_up").removeClass("active");
+                        act_element.find("span.rate").html(vote_rate);
+                        act_element.find("div.vote_up").removeClass("active");
                         alert("{% blocktrans %}Your vote has been deleted{% endblocktrans %}");
                     }
                 });
             })
 
             $("div.vote_down").click(function () {
+                var act_element = $(this).parent();
+                var url = $(this).data("link");
                 $.ajax({
                     type: "POST",
-                    url: "/question/{{ question.id }}/vote_down/",
+                    url: url,
                     data: post_data,
                     success: function (data) {
-                        var vote_rate = parseInt($("div.question_vote span").text());
+                        var vote_rate = parseInt(act_element.find("span.rate").text());
                         vote_rate -= 1;
                         if (vote_rate == 0) {
                             vote_rate = -1;
                         }
-                        $("div.vote_up").removeClass("active");
-                        $("div.vote_down").addClass("active");
-                        $("div.question_vote span").html(vote_rate);
+                        act_element.find("div.vote_up").removeClass("active");
+                        act_element.find("div.vote_down").addClass("active");
+                        act_element.find("span.rate").html(vote_rate);
 
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        var vote_rate = parseInt($("div.question_vote span").text());
+                        var vote_rate = parseInt(act_element.find("span.rate").text());
                         vote_rate += 1;
-                        $("div.question_vote span").html(vote_rate);
-                        $("div.vote_down").removeClass("active");
-                         alert("{% blocktrans %}Your vote has been deleted{% endblocktrans %}");
+                        act_element.find("span.rate").html(vote_rate);
+                        act_element.find("div.vote_down").removeClass("active");
+                        alert("{% blocktrans %}Your vote has been deleted{% endblocktrans %}");
                     }
                 });
             })
@@ -69,13 +75,13 @@
 {% block content %}
     {% if success_text %}{{ success_text }}{% endif %}
     <div class="question_detail">
-        <div class="question_title">
-            {{ question.title }}
+        <div>
+            <span class="question_title">{{ question.title }}</span>
         </div>
         <div class="question_vote">
-            <div class="vote_up fa fa-chevron-up {% if user_vote == 1 %} active {% endif %}"></div>
-            <span>{{ question.get_rate }}</span>
-            <div class="vote_down fa fa-chevron-down {% if user_vote == -1 %} active {% endif %}"></div>
+            <div class="vote_up fa fa-chevron-up {% if user_vote == 1 %} active {% endif %}" data-link="{% url 'question_vote_up' question.id %}"></div>
+            <span class="rate">{{ question.get_rate }}</span>
+            <div class="vote_down fa fa-chevron-down {% if user_vote == -1 %} active {% endif %}" data-link="{% url 'question_vote_down' question.id %}"></div>
         </div>
         <div class="question_content">
             <div class="question_text">
@@ -86,11 +92,19 @@
     <div class="answers">
         <div class="answer_list">
             {% for answer in question.answer_set.all %}
-                <div id="answer_{{ answer.id }}">{{ answer.text }}</div>
-                {% if answer.user == user %}
-                    <div class="answer_edit"><a class="question_title" href="{% url 'answer_update' answer.id %}">
-                        {% blocktrans %}Edit your answer{% endblocktrans %}
-                    </a></div>{% endif %}
+                <div class="answer_block">
+                    <div class="answer_vote">
+                        <div class="vote_up fa fa-chevron-up {% answer_is_vote_up user answer %}" data-link="{% url 'answer_vote_up' question.id  answer.id %}"></div>
+                        <span class="rate">{{ answer.get_rate }}</span>
+                        <div class="vote_down fa fa-chevron-down {% answer_is_vote_down user answer %}" data-link="{% url 'answer_vote_down' question.id  answer.id %}"></div>
+                    </div>
+                    <div class="answer">{{ answer.text }}
+                        {% if answer.user == user %}
+                            <a class="answer_edit" href="{% url 'answer_update' question.id answer.id %}">
+                                {% blocktrans %}Edit your answer{% endblocktrans %}
+                            </a>{% endif %}
+                    </div>
+                </div>
             {% endfor %}
         </div>
         <div class="post_answer">

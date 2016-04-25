@@ -3,6 +3,7 @@ from django.core.serializers import json
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import ListView, DetailView, UpdateView
 from django.views.generic.edit import ModelFormMixin, ProcessFormView
@@ -50,6 +51,7 @@ class QuestionDetailView(DetailView):
         form = AnswerForm(None)
         context['answer_form'] = form
         context['user_vote'] = self.object.is_vote_by_user(self.request.user)
+        context['answers'] = self.object.answer_set.all()
         try:
             context['success_text'] = self.request.session.get('success_text', None)
             del self.request.session['success_text']
@@ -82,15 +84,15 @@ class QuestionUpdateView(UpdateView):
 
     def get_success_url(self):
         user = self.request.user
-        self.request.session["success_text"] = _("Answer successful edited.")
-        return "/question/{0}".format(self.object.id)
+        self.request.session["success_text"] = ugettext("Answer successful edited.")
+        return "/question/{0}/".format(self.object.id)
 
 
 def question_vote_up(request, question_id):
     if request.method == "POST" and request.user.is_authenticated():
         question = Question.objects.get(pk=question_id)
         vote = request.user.vote_question(question, 1)
-        if vote != None:
+        if vote is not None:
             return HttpResponse()
         else:
             return HttpResponseBadRequest()
@@ -101,7 +103,29 @@ def question_vote_down(request, question_id):
     if request.method == "POST" and request.user.is_authenticated():
         question = Question.objects.get(pk=question_id)
         vote = request.user.vote_question(question, -1)
-        if vote != None:
+        if vote is not None:
+            return HttpResponse()
+        else:
+            return HttpResponseBadRequest()
+    return HttpResponseBadRequest()
+
+
+def answer_vote_up(request, question_id, answer_id):
+    if request.method == "POST" and request.user.is_authenticated():
+        answer = Answer.objects.get(pk=answer_id)
+        vote = request.user.vote_answer(answer, 1)
+        if vote is not None:
+            return HttpResponse()
+        else:
+            return HttpResponseBadRequest()
+    return HttpResponseBadRequest()
+
+
+def answer_vote_down(request, question_id, answer_id):
+    if request.method == "POST" and request.user.is_authenticated():
+        answer = Answer.objects.get(pk=answer_id)
+        vote = request.user.vote_answer(answer, -1)
+        if vote is not None:
             return HttpResponse()
         else:
             return HttpResponseBadRequest()
@@ -116,5 +140,5 @@ class AnswerUpdateView(UpdateView):
 
     def get_success_url(self):
         user = self.request.user
-        self.request.session["success_text"] = _("Answer successful edited.")
-        return "/question/{0}".format(self.object.id)
+        self.request.session["success_text"] = ugettext("Answer successful edited.")
+        return "/question/{0}/".format(self.object.question.id)

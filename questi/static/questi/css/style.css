@@ -1,28 +1,35 @@
+body{
+    font-family: "Lucida Sans", sans-serif;
+}
+
 h2{
     font-family: "Helvetica", sans-serif;
 }
 
 /*START Question List*/
 div.question_list .question_item{
-   padding-top:10px;
+    padding-top:10px;
     padding-bottom: 10px;
 }
 
 div.question_list .question_title{
     text-decoration: none;
-    color:grey;
+    color:white;
     font-size: 24px;
 }
 
 div.question_list .question_title:visited{
-    color:grey;
+    color:white;
     font-size: 24px;
 }
 
 div.question_list .question_summary {
     display: inline-block;
     text-align: center;
-    vertical-align: top;
+    vertical-align: middle;
+    padding:10px;
+    background-color: rgba(0,255,0,0.2);
+    margin-right: -5px;
 }
 
 div.question_list .question_summary .votes{
@@ -43,7 +50,21 @@ div.question_list .question_summary .views{
 div.question_list .question_content{
     display: inline-block;
     vertical-align: middle;
+    background-color: #1abc9c;
+    padding: 10px;
+    border-radius: 10px;
+    border: grey 1px solid;
 }
+div.question_list .question_creationtime{
+    font-size: smaller;
+    text-align: right;
+}
+
+div.question_list .question_edit{
+    float: right;
+    text-decoration: none;
+}
+
 /*END Question List*/
 
 /*START Question Create*/
@@ -54,8 +75,12 @@ label[for=id_text]{
 
 /*START Question Detail*/
 div.question_detail .question_title{
-    color:grey;
+    color:black;
     font-size: 24px;
+}
+
+div.question_detail{
+    border-bottom: 1px black solid;
 }
 
 div.question_detail .question_content{
@@ -66,6 +91,24 @@ div.question_detail .question_vote{
     display: inline-block;
     text-align: center;
     vertical-align: middle;
+}
+
+div.answers .answer_block{
+    display: block;
+}
+
+div.question_detail .question_title{
+    padding: 10px;
+    display: inline-block;
+}
+
+div.answers .answer{
+    background-color: rgba(0, 255, 0, 0.2);
+    margin-bottom: 5px;
+    margin-top: 5px;
+    padding: 10px;
+    display: inline-block;
+    border-radius: 10px;
 }
 
 ul.errorlist{
