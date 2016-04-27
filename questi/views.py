@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import PermissionDenied
 from django.core.serializers import json
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
@@ -78,9 +79,15 @@ class QuestionDetailView(DetailView):
 class QuestionUpdateView(UpdateView):
     model = Question
     slug_field = 'pk'
-    fields = ['text',
-              'title']
+    fields = ['title',
+              'text']
     template_name_suffix = '_update'
+
+    def get_object(self, *args, **kwargs):
+        obj = super(QuestionUpdateView, self).get_object(*args, **kwargs)
+        if obj.user != self.request.user:
+            raise PermissionDenied()  # or Http404
+        return obj
 
     def get_success_url(self):
         user = self.request.user

@@ -38,7 +38,7 @@ class Question(models.Model):
             return 0
 
     def __str__(self):
-        return self.title
+        return self.title.encode('ascii', errors='raplace')
 
 
 class Answer(models.Model):
@@ -63,7 +63,7 @@ class Answer(models.Model):
             return 0
 
     def __str__(self):
-        return self.text
+        return self.text.encode('ascii', errors='replace')
 
 
 class Comment(models.Model):

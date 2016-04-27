@@ -1,13 +1,17 @@
 {% extends "questi/index.html" %}
 {% load i18n %}
 
-{% block title %}{% blocktrans %}Edit your answer{% endblocktrans %}{% endblock %}
-
-{% block content %}
-    <div class="question_update">
-        <form action="" method="post">{% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="{% trans "update" %}"/>
-        </form>
-    </div>
-{% endblock %}
+{% block title %}{% blocktrans %}Edit your question{% endblocktrans %}{% endblock %}
+{% if request.user == question.user %}
+    {% block content %}
+        <div class="question_update">
+            <form action="" method="post">{% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="{% trans "update" %}"/>
+            </form>
+        </div>
+    {% endblock %}
+{% else %}
+    {% blocktrans %}Your Not allow to edit this question{% endblocktrans %}
+{% endif %}
+{
