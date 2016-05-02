@@ -27,9 +27,12 @@
                         {{ question.title }}
                     </a>
                     <div class="question_creationtime">{{ question.get_time_as_string }}</div>
-                    <a class="question_edit" href="{% url 'question_update' question.id %}">
-                       {% blocktrans %}Edit{% endblocktrans %}
-                    </a>
+                    {% if user == question.user %}
+                        <a class="question_edit" href="{% url 'question_update' question.id %}">
+                            {% blocktrans %}Edit{% endblocktrans %}
+                        </a>
+                    {% endif %}
+
                 </div>
             </div>
         {% empty %}

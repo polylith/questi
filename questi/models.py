@@ -17,10 +17,10 @@ class Question(models.Model):
         create_time = self.created_at.strftime('%d.%m.%Y %H:%M %S Uhr')
         update_time = self.updated_at.strftime('%d %m %Y %H:%M %S Uhr')
         if create_time == update_time:
-            return "{0} {1} von {2}".format(_("erstellt am"), self.created_at.strftime('%d.%m.%Y %H:%M Uhr'),
+            return "{0} {1} von {2}".format(_("created at"), self.created_at.strftime('%d.%m.%Y %H:%M Uhr'),
                                             self.user)
         else:
-            return "{0} {1} von {2}".format(_("zuletzt geändert am"), self.updated_at.strftime('%d.%m.%Y %H:%M Uhr'),
+            return "{0} {1} von {2}".format(_("last changed at"), self.updated_at.strftime('%d.%m.%Y %H:%M Uhr'),
                                             self.user)
 
     def get_rate(self):
@@ -37,8 +37,8 @@ class Question(models.Model):
         except Vote.DoesNotExist:
             return 0
 
-    def __str__(self):
-        return self.title.encode('ascii', errors='raplace')
+    def __unicode__(self):
+        return self.title
 
 
 class Answer(models.Model):
@@ -62,8 +62,8 @@ class Answer(models.Model):
         except Vote.DoesNotExist:
             return 0
 
-    def __str__(self):
-        return self.text.encode('ascii', errors='replace')
+    def __unicode__(self):
+        return self.text
 
 
 class Comment(models.Model):
